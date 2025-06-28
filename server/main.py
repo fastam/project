@@ -51,7 +51,7 @@ ADMIN_PASSWORD = "1234"
 
 @app.get("/")
 def read_root():
-    """Главная страница API"""
+    # Главная страница API
     return {"message": "Activity Registry API работает!"}
 
 @app.post("/api/requests")
@@ -63,7 +63,7 @@ async def create_request(
     file: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
-    """Создание новой заявки на активность"""
+    # Создание новой заявки на активность
     try:
         # Проверяем тип файла
         allowed_types = ["image/jpeg", "image/png", "application/pdf"]
@@ -102,7 +102,7 @@ async def create_request(
 
 @app.post("/api/admin/login")
 def admin_login(login_data: AdminLogin):
-    """Авторизация администратора"""
+    # Авторизация администратора
     if login_data.password == ADMIN_PASSWORD:
         return {"success": True, "message": "Успешная авторизация"}
     else:
@@ -110,7 +110,7 @@ def admin_login(login_data: AdminLogin):
 
 @app.get("/api/admin/requests/pending")
 def get_pending_requests(db: Session = Depends(get_db)):
-    """Получение всех заявок на рассмотрении"""
+    # Получение всех заявок на рассмотрении
     requests = db.query(ActivityRequest).filter(
         ActivityRequest.status == "pending"
     ).order_by(ActivityRequest.created_at.desc()).all()
@@ -133,7 +133,7 @@ def get_pending_requests(db: Session = Depends(get_db)):
 
 @app.get("/api/admin/requests/approved")
 def get_approved_requests(db: Session = Depends(get_db)):
-    """Получение всех одобренных заявок"""
+    # Получение всех одобренных заявок"""
     requests = db.query(ActivityRequest).filter(
         ActivityRequest.status == "approved"
     ).order_by(ActivityRequest.created_at.desc()).all()
@@ -160,7 +160,7 @@ def update_request_status(
     status_update: UpdateStatus, 
     db: Session = Depends(get_db)
 ):
-    """Обновление статуса заявки (одобрить/отклонить)"""
+    # Обновление статуса заявки (одобрить/отклонить)
     request = db.query(ActivityRequest).filter(
         ActivityRequest.id == request_id
     ).first()
@@ -178,7 +178,7 @@ def update_request_status(
 
 @app.delete("/api/admin/requests/{request_id}")
 def delete_request(request_id: int, db: Session = Depends(get_db)):
-    """Удаление заявки"""
+    # Удаление заявки
     request = db.query(ActivityRequest).filter(
         ActivityRequest.id == request_id
     ).first()
